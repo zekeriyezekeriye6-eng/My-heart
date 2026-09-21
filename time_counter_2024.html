@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عداد الوقت</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    font-family:Arial,Tahoma,sans-serif; color:#fff;
+    background:linear-gradient(135deg,#0f172a,#111827 55%,#1e293b);
+    padding:20px;
+  }
+  .card{
+    width:min(760px,100%); padding:32px 22px; border-radius:28px;
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 20px 60px rgba(0,0,0,.35); text-align:center;
+    backdrop-filter:blur(12px);
+  }
+  h1{margin:0 0 10px;font-size:clamp(28px,6vw,48px)}
+  .from{opacity:.75;margin-bottom:28px;font-size:15px}
+  .timer{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+  }
+  .unit{
+    padding:22px 8px; border-radius:20px;
+    background:rgba(255,255,255,.08);
+  }
+  .num{font-size:clamp(30px,7vw,54px);font-weight:800;line-height:1}
+  .label{margin-top:10px;opacity:.7;font-size:14px}
+  .total{
+    margin-top:24px; padding:18px; border-radius:18px;
+    background:rgba(255,255,255,.05); line-height:1.9;
+  }
+  .total b{font-size:20px}
+  .status{margin-top:18px;font-size:13px;opacity:.55}
+  @media(max-width:520px){.timer{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>⏳ عداد الوقت</h1>
+  <div class="from">من 10 مايو 2024 — الساعة 12:15 بعد منتصف الليل</div>
+
+  <div class="timer">
+    <div class="unit"><div class="num" id="days">0</div><div class="label">يوم</div></div>
+    <div class="unit"><div class="num" id="hours">0</div><div class="label">ساعة</div></div>
+    <div class="unit"><div class="num" id="minutes">0</div><div class="label">دقيقة</div></div>
+    <div class="unit"><div class="num" id="seconds">0</div><div class="label">ثانية</div></div>
+  </div>
+
+  <div class="total">
+    <div>إجمالي الساعات: <b id="totalHours">0</b></div>
+    <div>إجمالي الثواني: <b id="totalSeconds">0</b></div>
+  </div>
+
+  <div class="status">العداد يتحدث تلقائياً كل ثانية</div>
+</div>
+
+<script>
+  // وقت البداية: 10 مايو 2024 الساعة 00:15:00
+  // التوقيت المحلي للجهاز
+  const start = new Date(2024, 4, 10, 0, 15, 0);
+
+  function update() {
+    const now = new Date();
+    let diff = now - start;
+
+    if (diff < 0) {
+      document.getElementById("days").textContent = "0";
+      document.getElementById("hours").textContent = "0";
+      document.getElementById("minutes").textContent = "0";
+      document.getElementById("seconds").textContent = "0";
+      document.getElementById("totalHours").textContent = "0";
+      document.getElementById("totalSeconds").textContent = "0";
+      return;
+    }
+
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    document.getElementById("days").textContent = days.toLocaleString("ar-IQ");
+    document.getElementById("hours").textContent = hours.toLocaleString("ar-IQ");
+    document.getElementById("minutes").textContent = minutes.toLocaleString("ar-IQ");
+    document.getElementById("seconds").textContent = seconds.toLocaleString("ar-IQ");
+    document.getElementById("totalHours").textContent =
+      (totalSeconds / 3600).toLocaleString("ar-IQ", {maximumFractionDigits: 6});
+    document.getElementById("totalSeconds").textContent =
+      totalSeconds.toLocaleString("ar-IQ");
+  }
+
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>
